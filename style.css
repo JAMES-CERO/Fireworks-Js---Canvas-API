@@ -30,7 +30,24 @@ h1{
     font-size: 6vw;
     padding: 0 1rem;
     z-index: 2;
+    background-image: linear-gradient(
+        to right top,
+        #002A22,
+        #618B4A,
+        #AF3E4D,
+        #ffffff
+    );
+    background-size: 50% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientAnimation 7.5s ease alternate infinite;
 }
+@keyframes gradientAnimation{
+    to {
+        background-position: 100% top;
+    }
+}
+
 
 p{
     text-transform: uppercase;
@@ -48,4 +65,15 @@ p{
 img{
     z-index: 1;
     bottom: 5%;
+}
+.textContainer{
+    display: flex;
+    z-index: 1;
+    flex-direction: column;
+    position: absolute;
+    top: 5%;
+    width: 100%;
+    height: 20%;
+    justify-content: center;
+    align-items: center;
 }
