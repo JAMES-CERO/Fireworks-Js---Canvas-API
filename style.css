@@ -6,7 +6,8 @@ we are importing custom font from google fonts
 
 body{
     margin:0;
-    padding: 0;
+    padding: 0; 
+
     overflow: hidden;
     font-family: 'Pacifico', cursive;
     color: rgb(10, 9, 9);
