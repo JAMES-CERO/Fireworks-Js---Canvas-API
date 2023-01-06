@@ -49,11 +49,21 @@ h1{
 }
 
 
+
 p{
     text-transform: uppercase;
     font-size: 1.5vw;
     font-family: 'Work Sans', sans-serif;
     z-index: 2;
+    background-image: linear-gradient(
+        to right top,
+        #002A22,
+        #ffffff
+    );
+    background-size: 50% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientAnimation 5.5s ease alternate infinite;
 }
 .imgContainer{
     display: flex;

@@ -12,6 +12,12 @@ const height = window.innerHeight;
 
 canvas.width = width;
 canvas.height = height;
+// stars variables 
+
+const stars = 50;
+// helper function to generate random numbers
+const random = (min,max) => Math.random() * (max - min) + min;
+
 
 //IIFE.  inmediatly invoke function expression 
 
@@ -49,8 +55,23 @@ const drawForeground = () => {
     context.fillRect(0, height * 0.955, width, height);
   };
 
+const drawStars = () => {
+    let countStars = stars;
+
+    context.fillStyle = '#E6E6FA';
+
+    while(countStars--){
+
+        const x = random(15, width - 50);
+        const y = random(15, height * 0.5);
+        const size = random(1, 4);
+
+        context.fillRect(x, y, size, size);
+
+    }
+}
 
   drawBackground();
   drawForeground();
-  
+  drawStars();
   })();
