@@ -80,6 +80,14 @@
         //clla the loop f indefinitely and redraw the scrren every fraame 
         requestAnimationFrame(loop);
         anchorPoint();
+        if (mouseClicked) {
+            fireworks.push(new Firework());
+        }
+
+        let fireworkIndex = fireworks.length;
+        while (fireworkIndex--){
+            fireworks[fireworkIndex]. draw(fireworkIndex);
+        }
     };
 
     window.addEventListener('load', () => {
@@ -91,6 +99,7 @@
     class Firework {
         constructor() {
             const init = () => {
+                let fireworksLength = 8;
                 
                 //current coordinates
                 this.x = positions.anchorX;
@@ -115,9 +124,96 @@
                     this.target_y - positions.anchorY
                 );
                 this.speed = 15;
-                
+                this.friction = 0.99;
+                this.hue = random(0, 360);
+
+                while( fireworksLength--) {
+                    this.coordinates.push([this.x, this.y]);
+                }
+            };
+
+            this.animate = (index) => {
+                this.coordinates.pop();
+                this.coordinates.unshift([this.x, this.y]);
+
+                this.speed += this.friction;
+
+                let velocity_x = Math.cos(this.angle) * this.speed;
+                let velocity_y = Math.sin(this.angle) * this.speed;
+
+                this.distanceTotal = distance(
+                    positions.anchorX,
+                    positions.anchorY,
+                    this.x + velocity_x,
+                    this.y = velocity_y
+                );
+
+                if(this.distanceTotal >= this.distanceToTarget) {
+                    let i = shootsTotal;
+                    fireworks.splice(index, 1);
+                } else {
+                    this.x += velocity_x;
+                    this.y += velocity_y;
+                }
+
             }
+
+            this.draw = (index) => { // take the index from the fw array
+                context.beginPath();
+                context.moveTo(
+                    this.coordinates[this.coordinates.length - 1][0],
+                    this.coordinates[this.coordinates.length - 1][1]
+                );
+                context.lineTo(this.x, this.y);
+
+                context.strokeStyle = `hsl(${this.hue}, 100%, 50%)`;//saturation / brightness
+                context.stroke();
+
+                this.animate(index);
+            };
             init();
         }
     }
+
+    class Fleck{
+        constructor(x, y) {
+            const init = () => {
+                this.x = x;
+                this.y = y;
+
+                let fleckLenght = 7;
+                this.coordinates = [];
+                this.angle = random(0, Math.PI * 2);
+                this.speed = random(1, 10);
+			
+                this.friction = 0.95;
+                this.gravity = 2;
+			
+                this.hue = random(0, 360);
+                this.alpha = 1;
+                this.decay = random(0.015, 0.03);
+			
+      while ( fleckLenght--) {
+        this.coordinates.push([this.x, this.y]);
+            }
+        }
+
+        this.draw = (index) => {
+            context.beginPath();
+            context.moveTo(
+              this.coordinates[this.coordinates.length - 1][0],
+              this.coordinates[this.coordinates.length - 1][1]
+            );
+            context.lineTo(this.x, this.y);
+              
+            context.strokeStyle = `hsla(${this.hue}, 100%, 50%, ${this.alpha})`;
+            context.stroke();
+              
+            this.animate(index);
+          };
+          
+          init();
+        }
+    }
+
 })();
