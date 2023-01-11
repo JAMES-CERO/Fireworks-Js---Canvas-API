@@ -37,18 +37,6 @@
 
     let mouseClicked = false;
 
-    //event listener / to track mouse-clickevents 
-    const attachEventListener = () => {
-        canvas.addEventListener('mousemove', (e) => {
-            positions.mouseX = e.pageX
-            positions.mouseY = e.pageY
-        });
-
-        canvas.addEventListener('mousedown', () => (mouseClicked = true));
-        canvas.addEventListener('mouseup', () => (mouseClicked = false));
-    };
-
-    //------------
 
     const anchorPoint = () => {
         //get the anchor position on canvas 
@@ -67,6 +55,17 @@
         // restores the empty context state
         context.restore();
     };
+
+     //event listener / to track mouse-clickevents 
+     const attachEventListener = () => {
+        canvas.addEventListener('mousemove', (e) => {
+            positions.mouseX = e.pageX
+            positions.mouseY = e.pageY
+        });
+
+        canvas.addEventListener('mousedown', () => (mouseClicked = true));
+        canvas.addEventListener('mouseup', () => (mouseClicked = false));
+    };
     
     //set the mouse position to the coordinates 
     const eventLPositions = () => {
@@ -77,7 +76,7 @@
     };
 
     const loop = () => {
-        //clla the loop f indefinitely and redraw the scrren every fraame 
+        //call the loop  indefinitely and redraw the scrren every fraame 
         requestAnimationFrame(loop);
         anchorPoint();
         if (mouseClicked) {
@@ -88,10 +87,25 @@
         while (fireworkIndex--){
             fireworks[fireworkIndex]. draw(fireworkIndex);
         }
+
+        let shootIndex = shoots.length;
+        while(shootIndex--){
+            shoots[shootIndex].draw(shootIndex);
+        }
+
+        let shootIndex2 = shoots2.length;
+        while(shootIndex2--){
+            shoots2[shootIndex2].draw(shootIndex2);
+        }
+
+        let shootIndex3 = shoots3.length;
+        while(shootIndex3--){
+            shoots3[shootIndex3].draw(shootIndex3);
+        }
     };
 
     window.addEventListener('load', () => {
-        eventLPositions();
+        attachEventListener();
         loop();
     });
 
@@ -150,6 +164,13 @@
 
                 if(this.distanceTotal >= this.distanceToTarget) {
                     let i = shootsTotal;
+
+                    while(i--){
+                        shoots.push(new Shooting(this.target_x, this.target_y));
+                        shoots2.push(new Shooting(this.target_x + 50, this.target_y - 50));
+                        shoots3.push(new Shooting(this.target_x - 100, this.target_y - 50));
+                    } //This will add the shoots to their corresponding arrays and position them relative to each other when the firework or better to say its trail, itself will get drawn.
+                   
                     fireworks.splice(index, 1);
                 } else {
                     this.x += velocity_x;
@@ -175,13 +196,13 @@
         }
     }
 
-    class Fleck{
+    class Shooting{
         constructor(x, y) {
             const init = () => {
                 this.x = x;
                 this.y = y;
 
-                let fleckLenght = 7;
+                let shootLenght = 7;
                 this.coordinates = [];
                 this.angle = random(0, Math.PI * 2);
                 this.speed = random(1, 10);
@@ -193,11 +214,26 @@
                 this.alpha = 1;
                 this.decay = random(0.015, 0.03);
 			
-      while ( fleckLenght--) {
+      while ( shootLenght--) {
         this.coordinates.push([this.x, this.y]);
             }
         }
+        this.animate = (index) => {
+            this.coordinates.pop();
+            this.coordinates.unshift([this.x, this.y]);
 
+            this.speed += this.friction;
+            this.x += Math.cos(this.angle) * this.speed;
+            this.y += Math.sin(this.angle) * this.speed + this.gravity;
+
+            this.alpha -= this.decay;
+
+            if (this.alpha <= this.decay) {
+                shoots.splice(index, 1);
+                shoots2.splice(index, 1);
+                shoots3.splice(index, 1);
+            }
+        };
         this.draw = (index) => {
             context.beginPath();
             context.moveTo(
@@ -208,6 +244,7 @@
               
             context.strokeStyle = `hsla(${this.hue}, 100%, 50%, ${this.alpha})`;
             context.stroke();
+            //note the same logic that is used for the fireworks trail is applied. The only difference is, that the strokeStyle also contains an alpha value to fade out the shoots / flecks over tim
               
             this.animate(index);
           };
